@@ -56,6 +56,7 @@ import com.google.devtools.build.lib.vfs.PathFragment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 /** Functionality specific to the Python rules in Bazel. */
@@ -166,8 +167,8 @@ public class BazelPythonSemantics implements PythonSemantics {
             ImmutableList.of(
                 Substitution.of(
                     "%main%", common.determineMainExecutableSource(/*withWorkspaceName=*/ true)),
-                Substitution.of("%python_binary%", pythonBinary),
-                Substitution.of("%imports%", Joiner.on(":").join(common.getImports().toList())),
+                Substitution.of("%python_binary%", pythonBinary),                 
+                Substitution.of("%imports%", Joiner.on(":").join(common.getImports().toList().stream().sorted().collect(Collectors.toList()))),
                 Substitution.of("%workspace_name%", ruleContext.getWorkspaceName()),
                 Substitution.of("%is_zipfile%", boolToLiteral(isForZipFile)),
                 Substitution.of(
